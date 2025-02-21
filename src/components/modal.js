@@ -1,9 +1,9 @@
-const handleEscKeyUp = (e) => {
+function handleEscKeyUp(e) {
   if (e.key === "Escape") {
     const popup = document.querySelector(".popup_is-opened"); // находим открытый попап
     closeModal(popup);
   }
-};
+}
 //открытие модального окна
 export function openModal(modal) {
   // добавили класс открытия попапа
