@@ -1,7 +1,5 @@
-import { openModalImage, closeModal } from "./modal.js";
-
 // Функция создания карточки
-export function makeCard({ name: title, link }, cardTemplate) {
+export function makeCard(cardData, cardTemplate, onOpenModal) {
   const cardElement = cardTemplate.cloneNode(true);
 
   // Находим элементы внутри карточки
@@ -11,12 +9,13 @@ export function makeCard({ name: title, link }, cardTemplate) {
   const likeButton = cardElement.querySelector(".card__like-button"); // Находим кнопку лайка
 
   // Заполняем карточку
-  cardTitle.textContent = title;
-  cardImage.src = link;
-  cardImage.alt = title;
+  cardTitle.textContent = cardData.name;
+  cardImage.src = cardData.link;
+  cardImage.alt = cardData.name;
 
   // Добавление обработчика клика по картинке
-  cardImage.addEventListener("click", () => openModalImage(title, link));
+  // Используем переданный колбэк
+  cardImage.addEventListener("click", () => onOpenModal(cardData.name, cardData.link)); 
 
   // Добавляем обработчик удаления
   deleteButton.addEventListener("click", (event) => {
@@ -39,35 +38,4 @@ function deleteCardPlace(cardElement) {
 function toggleLike(likeButton) {
   likeButton.classList.toggle("card__like-button_is-active");
 }
-//обработка и отправка новой карточки
-export function handleNewCardSubmit(
-  event,
-  newCardModal,
-  newCardForm,
-  cardTemplate,
-  placesList
-) {
-  event.preventDefault(); // Отменяем стандартное поведение формы
 
-  // Находим инпуты
-  const placeNameInput = newCardForm.querySelector(
-    ".popup__input_type_card-name"
-  );
-  const placeLinkInput = newCardForm.querySelector(".popup__input_type_url");
-
-  // Создаём объект новой карточки
-  const newCardInfo = {
-    name: placeNameInput.value,
-    link: placeLinkInput.value,
-  };
-
-  // Создаём карточку и добавляем в начало списка
-  const newCard = makeCard(newCardInfo, cardTemplate, openModalImage);
-  placesList.prepend(newCard);
-
-  // Очищаем форму
-  newCardForm.reset();
-
-  // Закрываем модальное окно
-  closeModal(newCardModal);
-}

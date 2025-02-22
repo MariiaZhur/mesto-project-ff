@@ -8,14 +8,11 @@ function handleEscKeyUp(e) {
 export function openModal(modal) {
   // добавили класс открытия попапа
   modal.classList.add("popup_is-opened");
-
-  const closeButton = modal.querySelector(".popup__close");
-  closeButton.addEventListener("click", function () {
-    closeModal(modal);
-  });
+  
   // добавили слушатель на кнопку Escape
   document.addEventListener("keyup", handleEscKeyUp);
 }
+
 //закрытие модального окна
 export function closeModal(modal) {
   // удалить класс открытия попапа
@@ -32,55 +29,38 @@ export function handleOverlayClick(eventTarget) {
   }
 }
 
-// Добавляет обработку клика на оверлей и открытие по кликабельному элементу
-export function initModal(clickableOpenningElement, modalForm) {
-  modalForm.addEventListener("click", function (event) {
+
+export function initModal(modalForm) {
+  modalForm.addEventListener("click",  (event) => {
     handleOverlayClick(event.target);
   });
 
-  clickableOpenningElement.addEventListener("click", function () {
+  const closeButton = modalForm.querySelector(".popup__close");
+  closeButton.addEventListener("click", () => {
+    closeModal(modalForm);
+  });
+}
+
+// Добавляет обработку клика на оверлей и открытие по кликабельному элементу
+export function initModalGlobal(clickableOpenningElement, modalForm) {
+  initModal(modalForm);
+  clickableOpenningElement.addEventListener("click",  () => {
     openModal(modalForm);
   });
 }
 
+// Функция для заполнения модального окна редактирования профиля
+export function populateProfileEditForm(profileAssignmentRout) {
+  profileAssignmentRout.formInput.name.value = profileAssignmentRout.documentText.name.textContent;
+  profileAssignmentRout.formInput.description.value = profileAssignmentRout.documentText.description.textContent;
+}
+
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
-export function handleFormSubmit(evt, modalForm) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
-  // Находим поля формы в DOM
-  const nameInput = modalForm.querySelector(".popup__input_type_name");
-  const jobInput = modalForm.querySelector(".popup__input_type_description");
-
-  // Выбираем элементы, куда должны быть вставлены значения полей
-  const profileName = document.querySelector(".profile__title");
-  const profileJob = document.querySelector(".profile__description");
-
-  // Вставляем новые значения с помощью textContent
-  profileName.textContent = nameInput.value;
-  profileJob.textContent = jobInput.value;
-
+export function handleProfileEditFormSubmit(event, profileEditModal, profileAssignmentRout) {
+  event.preventDefault(); // Эта строчка отменяет стандартную отправку формы
+ profileAssignmentRout.documentText.name.textContent =  profileAssignmentRout.formInput.name.value;
+ profileAssignmentRout.documentText.description.textContent =  profileAssignmentRout.formInput.description.value;
   // Закрываем попап
-  closeModal(document.querySelector(".popup_type_edit"));
-}
-
-//модальное окно с картинкой
-export function openModalImage(name, link) {
-  const popup = document.querySelector(".popup_type_image");
-  const popupImage = popup.querySelector(".popup__image");
-  const popupCaption = popup.querySelector(".popup__caption");
-
-  popupImage.src = link;
-  popupImage.alt = name;
-  popupCaption.textContent = name;
-
-  openModal(popup);
-}
-
-// Функция для заполнения модального окна редактирования профиля
-export function populateEditModal(editModal) {
-  const nameInput = editModal.querySelector(".popup__input_type_name");
-  const jobInput = editModal.querySelector(".popup__input_type_description");
-
-  nameInput.value = document.querySelector(".profile__title").textContent;
-  jobInput.value = document.querySelector(".profile__description").textContent;
+  closeModal(profileEditModal);
 }

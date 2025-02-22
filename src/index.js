@@ -1,58 +1,128 @@
-import "./pages/index.css"; // Главный файл стилей
+import "./pages/index.css"; //подключаем файл стилей
 
 import { initialCards } from "./components/cards.js";
-import { makeCard, handleNewCardSubmit } from "./components/card.js";
+import { makeCard } from "./components/card.js";
 import {
-  handleOverlayClick,
+  initModalGlobal,
+  populateProfileEditForm,
+  closeModal,
+  openModal,
   initModal,
-  populateEditModal,
-  handleFormSubmit,
+  handleProfileEditFormSubmit
 } from "./components/modal.js";
 
-// DOM-элементы
+// ======= ОБЪЯВЛЕНИЕ ПЕРЕМЕННЫХ ======== //
+// Темплейт карточки (вытаскиваем содержимое шаблона)
 const cardTemplate = document
-  .querySelector("#card-template")
-  .content.querySelector(".places__item");
+.querySelector("#card-template")
+.content.querySelector(".places__item");
 
-// DOM
+// Список карточек
 const placesList = document.querySelector(".places__list");
-const imgPopup = document.querySelector(".popup_type_image");
+
 // Находим форму в DOM
 const profileForm = document.querySelector(".popup__form[name='edit-profile']");
-// Находим поля формы в DOM
-//const nameInput = profileForm.querySelector(".popup__input_type_name");
-//const jobInput = profileForm.querySelector(".popup__input_type_description");
 
-const editButton = document.querySelector(".profile__edit-button");
-const editModal = document.querySelector(".popup_type_edit");
-initModal(editButton, editModal);
+const profileEditButton = document.querySelector(".profile__edit-button");
+const profileEditModal = document.querySelector(".popup_type_edit");
+// Связь между формой редактирования профиля и его отображением в документе
+const profileAssignmentRout = {
+  formInput: {
+    // Тут поля для ввода и редактирования в форме
+    name : profileEditModal.querySelector(".popup__input_type_name"),
+    description: profileEditModal.querySelector(".popup__input_type_description")
+  },
+  documentText: {
+    // Тут элементы для вывода текста в документе
+    name: document.querySelector(".profile__title"),
+    description: document.querySelector(".profile__description")
+  }
+}
 
-editButton.addEventListener("click", () => populateEditModal(editModal));
-const submitButton = editModal.querySelector(".popup__button");
-submitButton.addEventListener("click", (event) =>
-  handleFormSubmit(event, editModal)
+const newCardAddButton = document.querySelector(".profile__add-button");
+const newCardAddModal = document.querySelector(".popup_type_new-card");
+
+const newCardFormElement = newCardAddModal.querySelector(".popup__form");
+
+// Объявляем переменные для элементов попапа с просмотром изображения
+const imagePopup = document.querySelector(".popup_type_image");
+const imagePopupElementImg = imagePopup.querySelector(".popup__image");
+const imagePopupCaption = imagePopup.querySelector(".popup__caption");
+
+// ========== ФУНКЦИИ ========= //
+
+// Функция открытия попапа с картинкой
+//модальное окно с картинкой
+function openModalImage(imageTitle, imageLink) {
+  imagePopupElementImg.src = imageLink;
+  imagePopupElementImg.alt = imageTitle;
+  imagePopupCaption.textContent = imageTitle;
+
+  openModal(imagePopup);
+}
+//обработка и отправка новой карточки
+function handleNewCardSubmit(
+  event,
+  newCardModal,
+  newCardForm,
+  cardTemplate,
+  placesList
+) {
+  event.preventDefault(); // Отменяем стандартное поведение формы
+
+  // Находим инпуты
+  const placeNameInput = newCardForm.querySelector(".popup__input_type_card-name");
+  const placeLinkInput = newCardForm.querySelector(".popup__input_type_url");
+
+  // Создаём объект новой карточки
+  const newCardData = {
+    name: placeNameInput.value,
+    link: placeLinkInput.value,
+  };
+
+  // Создаём карточку и добавляем в начало списка
+  const newCard = makeCard(newCardData, cardTemplate, openModalImage);
+  placesList.prepend(newCard);
+
+  // Очищаем форму
+  newCardForm.reset();
+
+  // Закрываем модальное окно
+  closeModal(newCardModal);
+}
+
+// ========== ИНИЦИАЛИЗАЦИЯ ========= //
+
+// Инициализация модальных окон
+initModalGlobal(profileEditButton, profileEditModal);
+initModalGlobal(newCardAddButton, newCardAddModal);
+initModal(imagePopup);
+
+// ========== ОБРАБОТЧИКИ СОБЫТИЙ ========= //
+
+// Открытие модального окна редактирования профиля
+profileEditButton.addEventListener("click", () => populateProfileEditForm(profileAssignmentRout));
+
+// Обработчик отправки формы редактирования профиля через "submit"
+profileForm.addEventListener("submit", (event) =>
+  handleProfileEditFormSubmit(event, profileEditModal, profileAssignmentRout)
 );
 
-const newCardButton = document.querySelector(".profile__add-button");
-const newCardModal = document.querySelector(".popup_type_new-card");
-initModal(newCardButton, newCardModal);
-
-imgPopup.addEventListener("click", (event) => handleOverlayClick(event.target));
-
-const newCardForm = newCardModal.querySelector(".popup__form");
 // Добавляем обработчик на форму
-newCardForm.addEventListener("submit", (event) =>
+newCardFormElement.addEventListener("submit", (event) =>
   handleNewCardSubmit(
     event,
-    newCardModal,
-    newCardForm,
+    newCardAddModal,
+    newCardFormElement,
     cardTemplate,
     placesList
   )
 );
 
+// ========== ОТРИСОВКА ИСХОДНЫХ КАРТОЧЕК ========= //
+
 // Вывести карточки на страницу, вставляем карточки в DOM при итерации forEach
 initialCards.forEach((cardData) => {
-  const cardElement = makeCard(cardData, cardTemplate);
+  const cardElement = makeCard(cardData, cardTemplate, openModalImage);
   placesList.append(cardElement);
 });
