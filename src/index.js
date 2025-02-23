@@ -4,18 +4,16 @@ import { initialCards } from "./components/cards.js";
 import { makeCard } from "./components/card.js";
 import {
   initModalGlobal,
-  populateProfileEditForm,
   closeModal,
   openModal,
   initModal,
-  handleProfileEditFormSubmit
 } from "./components/modal.js";
 
 // ======= ОБЪЯВЛЕНИЕ ПЕРЕМЕННЫХ ======== //
 // Темплейт карточки (вытаскиваем содержимое шаблона)
 const cardTemplate = document
-.querySelector("#card-template")
-.content.querySelector(".places__item");
+  .querySelector("#card-template")
+  .content.querySelector(".places__item");
 
 // Список карточек
 const placesList = document.querySelector(".places__list");
@@ -29,20 +27,29 @@ const profileEditModal = document.querySelector(".popup_type_edit");
 const profileAssignmentRout = {
   formInput: {
     // Тут поля для ввода и редактирования в форме
-    name : profileEditModal.querySelector(".popup__input_type_name"),
-    description: profileEditModal.querySelector(".popup__input_type_description")
+    name: profileEditModal.querySelector(".popup__input_type_name"),
+    description: profileEditModal.querySelector(
+      ".popup__input_type_description"
+    ),
   },
   documentText: {
     // Тут элементы для вывода текста в документе
     name: document.querySelector(".profile__title"),
-    description: document.querySelector(".profile__description")
-  }
-}
+    description: document.querySelector(".profile__description"),
+  },
+};
 
 const newCardAddButton = document.querySelector(".profile__add-button");
 const newCardAddModal = document.querySelector(".popup_type_new-card");
 
 const newCardFormElement = newCardAddModal.querySelector(".popup__form");
+// Находим инпуты
+const placeNameInput = newCardFormElement.querySelector(
+  ".popup__input_type_card-name"
+);
+const placeLinkInput = newCardFormElement.querySelector(
+  ".popup__input_type_url"
+);
 
 // Объявляем переменные для элементов попапа с просмотром изображения
 const imagePopup = document.querySelector(".popup_type_image");
@@ -65,14 +72,12 @@ function handleNewCardSubmit(
   event,
   newCardModal,
   newCardForm,
+  placeNameInput,
+  placeLinkInput,
   cardTemplate,
   placesList
 ) {
   event.preventDefault(); // Отменяем стандартное поведение формы
-
-  // Находим инпуты
-  const placeNameInput = newCardForm.querySelector(".popup__input_type_card-name");
-  const placeLinkInput = newCardForm.querySelector(".popup__input_type_url");
 
   // Создаём объект новой карточки
   const newCardData = {
@@ -91,6 +96,30 @@ function handleNewCardSubmit(
   closeModal(newCardModal);
 }
 
+// Функция для заполнения модального окна редактирования профиля
+function populateProfileEditForm(profileAssignmentRout) {
+  profileAssignmentRout.formInput.name.value =
+    profileAssignmentRout.documentText.name.textContent;
+  profileAssignmentRout.formInput.description.value =
+    profileAssignmentRout.documentText.description.textContent;
+}
+
+// Обработчик «отправки» формы, хотя пока
+// она никуда отправляться не будет
+function handleProfileEditFormSubmit(
+  event,
+  profileEditModal,
+  profileAssignmentRout
+) {
+  event.preventDefault(); // Эта строчка отменяет стандартную отправку формы
+  profileAssignmentRout.documentText.name.textContent =
+    profileAssignmentRout.formInput.name.value;
+  profileAssignmentRout.documentText.description.textContent =
+    profileAssignmentRout.formInput.description.value;
+  // Закрываем попап
+  closeModal(profileEditModal);
+}
+
 // ========== ИНИЦИАЛИЗАЦИЯ ========= //
 
 // Инициализация модальных окон
@@ -101,7 +130,9 @@ initModal(imagePopup);
 // ========== ОБРАБОТЧИКИ СОБЫТИЙ ========= //
 
 // Открытие модального окна редактирования профиля
-profileEditButton.addEventListener("click", () => populateProfileEditForm(profileAssignmentRout));
+profileEditButton.addEventListener("click", () =>
+  populateProfileEditForm(profileAssignmentRout)
+);
 
 // Обработчик отправки формы редактирования профиля через "submit"
 profileForm.addEventListener("submit", (event) =>
@@ -114,6 +145,8 @@ newCardFormElement.addEventListener("submit", (event) =>
     event,
     newCardAddModal,
     newCardFormElement,
+    placeNameInput,
+    placeLinkInput,
     cardTemplate,
     placesList
   )
