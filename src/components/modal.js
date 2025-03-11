@@ -1,3 +1,4 @@
+// закрытие модального окна по "Escape"
 function handleEscKeyUp(e) {
   if (e.key === "Escape") {
     const popup = document.querySelector(".popup_is-opened"); // находим открытый попап
@@ -29,7 +30,7 @@ export function handleOverlayClick(eventTarget) {
   }
 }
 
-
+// Функция настраивает модальное окно для закрытия по клику на оверлей и по кнопке закрытия
 export function initModal(modalForm) {
   modalForm.addEventListener("click",  (event) => {
     handleOverlayClick(event.target);
@@ -45,6 +46,7 @@ export function initModal(modalForm) {
 export function initModalGlobal(clickableOpenningElement, modalForm) {
   initModal(modalForm);
   clickableOpenningElement.addEventListener("click",  () => {
+    
     openModal(modalForm);
   });
 }
