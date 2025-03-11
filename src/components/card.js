@@ -1,4 +1,3 @@
-
 // Функция создания карточки
 export function makeCard(
   cardData,
@@ -7,10 +6,9 @@ export function makeCard(
   userId,
   likeCard,
   unlikeCard,
-  openDeleteCardPopup 
+  openDeleteCardPopup
 ) {
   const cardElement = cardTemplate.cloneNode(true);
-
   // Находим элементы внутри карточки
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
@@ -34,12 +32,10 @@ export function makeCard(
   cardImage.src = cardData.link || placeholder;
   cardImage.alt = cardData.name || "Изображение недоступно";
 
-  // Добавляем обработчик ошибки загрузки изображения (чтобы не зацикливалось)
+  // Добавляем обработчик ошибки загрузки изображения
   cardImage.onerror = () => {
-    if (cardImage.src !== placeholder) {
-      cardImage.src = placeholder;
-      cardImage.alt = "Изображение недоступно";
-    }
+    cardImage.src = placeholder;
+    cardImage.alt = "Изображение недоступно";
   };
 
   // Добавление обработчика клика по картинке
@@ -47,17 +43,14 @@ export function makeCard(
   cardImage.addEventListener("click", () =>
     onOpenModal(cardData.name, cardData.link)
   );
-
   // скрываем кнопку удаления, если карточка чужая
   if (cardData.owner._id !== userId) {
     deleteButton.style.display = "none";
   }
-
   // Добавляем обработчик удаления (теперь для подтверждения)
-  console.log("deleteButton.addEventListener cardDataId="+cardData._id);
   deleteButton.addEventListener("click", () => {
-    console.log("deleteButton click event listener");
-    openDeleteCardPopup(cardData._id, cardElement);});
+    openDeleteCardPopup(cardData._id, cardElement);
+  });
   // Обработчик лайка
   likeButton.addEventListener("click", (event) => {
     event.stopPropagation(); // Останавливаем всплытие другого события
@@ -66,20 +59,6 @@ export function makeCard(
 
   return cardElement; // Возвращаем созданную карточку
 }
-
-// // Функция удаления карточки
-// function deleteCardPlace(cardElement, cardId, deleteCardFromServer) {
-//   if (confirm("Вы уверены, что хотите удалить эту карточку?")) {
-//     deleteCardFromServer(cardId)
-//       .then(() => {
-//         cardElement.remove(); // Удаляем карточку из интерфейса
-//       })
-//       .catch((error) => {
-//         console.error("Ошибка при удалении карточки:", error);
-//         alert("Не удалось удалить карточку. Попробуйте ещё раз.");
-//       });
-//   }
-// }
 
 //функция для обновления счётчика лайков
 function updateLikeCounter(cardElement, likes) {

@@ -5,11 +5,12 @@ function handleEscKeyUp(e) {
     closeModal(popup);
   }
 }
+
 //открытие модального окна
 export function openModal(modal) {
   // добавили класс открытия попапа
   modal.classList.add("popup_is-opened");
-  
+
   // добавили слушатель на кнопку Escape
   document.addEventListener("keyup", handleEscKeyUp);
 }
@@ -32,7 +33,7 @@ export function handleOverlayClick(eventTarget) {
 
 // Функция настраивает модальное окно для закрытия по клику на оверлей и по кнопке закрытия
 export function initModal(modalForm) {
-  modalForm.addEventListener("click",  (event) => {
+  modalForm.addEventListener("click", (event) => {
     handleOverlayClick(event.target);
   });
 
@@ -45,10 +46,7 @@ export function initModal(modalForm) {
 // Добавляет обработку клика на оверлей и открытие по кликабельному элементу
 export function initModalGlobal(clickableOpenningElement, modalForm) {
   initModal(modalForm);
-  clickableOpenningElement.addEventListener("click",  () => {
-    
+  clickableOpenningElement.addEventListener("click", () => {
     openModal(modalForm);
   });
 }
-
-

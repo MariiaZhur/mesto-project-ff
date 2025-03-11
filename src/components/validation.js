@@ -1,8 +1,10 @@
 // для включения валидации
 export function enableValidation(validationConfig) {
-  const formElements = Array.from(document.querySelectorAll(validationConfig.formSelector));
+  const formElements = Array.from(
+    document.querySelectorAll(validationConfig.formSelector)
+  );
   formElements.forEach(function (formElement) {
-    formElement.addEventListener('submit', function (evt) {
+    formElement.addEventListener("submit", function (evt) {
       // Дублирует код в основном скрипте, можно в основном скрипте попробовать удалить
       evt.preventDefault();
     });
@@ -13,11 +15,15 @@ export function enableValidation(validationConfig) {
 //функция добавления EventListener
 function setEventListeners(formElement, validationConfig) {
   // Селекторы из validationConfig
-  const inputElements = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
-  const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
+  const inputElements = Array.from(
+    formElement.querySelectorAll(validationConfig.inputSelector)
+  );
+  const buttonElement = formElement.querySelector(
+    validationConfig.submitButtonSelector
+  );
 
   inputElements.forEach(function (inputElement) {
-    inputElement.addEventListener('input', function () {
+    inputElement.addEventListener("input", function () {
       checkInputValidity(inputElement, validationConfig);
       // Чтобы проверять состояние кнопки при изменении любого из полей
       toggleButtonState(inputElements, buttonElement, validationConfig);
@@ -27,12 +33,16 @@ function setEventListeners(formElement, validationConfig) {
 
 //функция очищения валидации
 export function clearValidation(formElement, validationConfig) {
-// Берем все селекторы из validationConfig
-const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
-inputList.forEach((inputElement) => {
- hideInputError(inputElement, validationConfig);
-});
-const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
+  // Берем все селекторы из validationConfig
+  const inputList = Array.from(
+    formElement.querySelectorAll(validationConfig.inputSelector)
+  );
+  inputList.forEach((inputElement) => {
+    hideInputError(inputElement, validationConfig);
+  });
+  const buttonElement = formElement.querySelector(
+    validationConfig.submitButtonSelector
+  );
   buttonElement.disabled = true;
   buttonElement.classList.add(validationConfig.inactiveButtonClass);
 }
@@ -74,7 +84,9 @@ export function checkInputValidity(inputElement, validationConfig) {
 // Функция для отображения ошибки
 function showInputError(inputElement, validationConfig) {
   // Селекторы берем из validationConfig
-  const errorElement = inputElement.form.querySelector(validationConfig.errorSpanSelectorPatern + inputElement.name);
+  const errorElement = inputElement.form.querySelector(
+    validationConfig.errorSpanSelectorPatern + inputElement.name
+  );
   errorElement.textContent = inputElement.validationMessage;
   inputElement.classList.add(validationConfig.inputErrorClass);
   errorElement.classList.add(validationConfig.errorClass);
@@ -83,7 +95,9 @@ function showInputError(inputElement, validationConfig) {
 // Функция для скрытия ошибки
 function hideInputError(inputElement, validationConfig) {
   // Селекторы берем из validationConfig
-  const errorElement = inputElement.form.querySelector(validationConfig.errorSpanSelectorPatern + inputElement.name);
+  const errorElement = inputElement.form.querySelector(
+    validationConfig.errorSpanSelectorPatern + inputElement.name
+  );
   errorElement.textContent = "";
   inputElement.classList.remove(validationConfig.inputErrorClass);
   errorElement.classList.remove(validationConfig.errorClass);
