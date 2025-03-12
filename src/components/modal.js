@@ -32,7 +32,8 @@ export function handleOverlayClick(eventTarget) {
 }
 
 // Функция настраивает модальное окно для закрытия по клику на оверлей и по кнопке закрытия
-export function initModal(modalForm) {
+export function initializeModalClose(modalForm) {
+  //название изменено
   modalForm.addEventListener("click", (event) => {
     handleOverlayClick(event.target);
   });
@@ -43,9 +44,9 @@ export function initModal(modalForm) {
   });
 }
 
-// Добавляет обработку клика на оверлей и открытие по кликабельному элементу
-export function initModalGlobal(clickableOpenningElement, modalForm) {
-  initModal(modalForm);
+// Добавляет обработку клика на открытие по кликабельному элементу
+export function initializeModalOpen(clickableOpenningElement, modalForm) {
+  initializeModalClose(modalForm);
   clickableOpenningElement.addEventListener("click", () => {
     openModal(modalForm);
   });

@@ -95,11 +95,12 @@
               type="text"
               name="place-name"
               minlength="2"
+              maxlength="30"
               class="popup__input popup__input_type_card-name"
               placeholder="Название"
               required
               pattern="^[a-zA-Zа-яА-ЯёЁ\- ]+$"
-              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+              data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса пробелы"
             />
             <span class="popup__error popup__error_place-name"></span>
             <input
@@ -159,9 +160,7 @@
         <div class="popup__content popup__delete-card-style">
           <button type="button" class="popup__close"></button>
           <h3 class="popup__title">Вы уверены?</h3>
-          <form class="popup__form" 
-          name="delete-card" 
-          novalidate>
+          <form class="popup__form" name="delete-card" novalidate>
             <button type="submit" class="button popup__button">Да</button>
           </form>
         </div>

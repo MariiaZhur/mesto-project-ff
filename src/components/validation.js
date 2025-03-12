@@ -5,7 +5,6 @@ export function enableValidation(validationConfig) {
   );
   formElements.forEach(function (formElement) {
     formElement.addEventListener("submit", function (evt) {
-      // Дублирует код в основном скрипте, можно в основном скрипте попробовать удалить
       evt.preventDefault();
     });
     setEventListeners(formElement, validationConfig);

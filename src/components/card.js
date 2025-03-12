@@ -74,8 +74,13 @@ function toggleCardLike(cardElement, cardId, userId, likeCard, unlikeCard) {
   const likeAction = isLiked ? unlikeCard(cardId) : likeCard(cardId);
 
   // Обновляем состояние лайка и счетчика
-  likeAction.then((data) => {
-    updateLikeCounter(cardElement, data.likes);
-    likeButton.classList.toggle("card__like-button_is-active");
-  });
+  likeAction
+    .then((data) => {
+      updateLikeCounter(cardElement, data.likes);
+      likeButton.classList.toggle("card__like-button_is-active");
+    })
+    // добавили обработку ошибок
+    .catch((error) => {
+      console.error("Ошибка лайка:", error);
+    });
 }

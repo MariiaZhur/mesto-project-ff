@@ -28,17 +28,17 @@ function makeRequest(url, method, body = null) {
     method,
     headers: {
       authorization: token,
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: body ? JSON.stringify(body) : null
+    body: body ? JSON.stringify(body) : null,
   })
-    .then(res => {
+    .then((res) => {
       if (!res.ok) {
         return Promise.reject(`Ошибка: ${res.status}`); // Выбрасываем ошибку, если статус не 200-299
       }
       return res.json(); // Если всё в порядке, возвращаем JSON
     })
-    .catch(error => console.error('Ошибка:', error));
+    .catch((error) => console.error("Ошибка:", error));
 }
 
 // Функция для запроса информации о пользователе
@@ -81,18 +81,4 @@ export function updateAvatar(avatarUrl) {
   return makeRequest("/users/me/avatar", "PATCH", { avatar: avatarUrl });
 }
 
-// Функция для обновления данных на странице
-export function updateUserProfile(
-  data,
-  profileName,
-  profileDescription,
-  avatarUserImg
-) {
-  // Обновляем имя и описание на странице
-  profileName.textContent = data.name;
-  profileDescription.textContent = data.about;
 
-  // Обновляем аватар
-  avatarUserImg.src = data.avatar;
-  avatarUserImg.alt = `Аватар пользователя ${data.name}`;
-}
